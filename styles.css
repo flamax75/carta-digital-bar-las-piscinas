@@ -203,19 +203,6 @@ h1 {
   font-weight: 700;
 }
 
-.food-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  margin-top: 18px;
-  font-size: 1.55rem;
-  background: #ffffff;
-  border: 2px solid var(--red);
-  border-radius: 50%;
-}
-
 .section-grid {
   display: grid;
   gap: 12px;
