@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var appVersion = "20260526-6";
+  var appVersion = "20260526-7";
   var versionCookie = "carta_version=" + appVersion;
 
   if (!document.cookie.includes(versionCookie)) {
@@ -10,6 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
   var menu = document.querySelector(".main-menu");
   var backTop = document.querySelector(".back-top");
   var installBox = document.querySelector(".install-box");
+  var urlParams = new URLSearchParams(window.location.search);
+
+  if (urlParams.get("source") === "pwa") {
+    localStorage.setItem("carta_installed", "true");
+  }
 
   function isInstalledApp() {
     return (

@@ -2,7 +2,7 @@
   "name": "Bar Las Piscinas Fuenmayor",
   "short_name": "Las Piscinas",
   "description": "Carta digital de Bar Las Piscinas Fuenmayor.",
-  "start_url": "index.html",
+  "start_url": "index.html?source=pwa",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
