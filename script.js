@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var appVersion = "20260526-4";
+  var appVersion = "20260526-6";
   var versionCookie = "carta_version=" + appVersion;
 
   if (!document.cookie.includes(versionCookie)) {
@@ -9,6 +9,41 @@ document.addEventListener("DOMContentLoaded", function () {
   var toggle = document.querySelector(".menu-toggle");
   var menu = document.querySelector(".main-menu");
   var backTop = document.querySelector(".back-top");
+  var installBox = document.querySelector(".install-box");
+
+  function isInstalledApp() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.matchMedia("(display-mode: fullscreen)").matches ||
+      window.navigator.standalone === true ||
+      localStorage.getItem("carta_installed") === "true"
+    );
+  }
+
+  function updateInstallBox() {
+    if (!installBox) {
+      return;
+    }
+
+    installBox.hidden = isInstalledApp();
+  }
+
+  updateInstallBox();
+
+  window.addEventListener("appinstalled", function () {
+    localStorage.setItem("carta_installed", "true");
+    updateInstallBox();
+  });
+
+  ["(display-mode: standalone)", "(display-mode: fullscreen)"].forEach(function (query) {
+    var mediaQuery = window.matchMedia(query);
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateInstallBox);
+    } else if (typeof mediaQuery.addListener === "function") {
+      mediaQuery.addListener(updateInstallBox);
+    }
+  });
 
   if (toggle && menu) {
     var backdrop = document.createElement("div");
