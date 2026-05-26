@@ -34,7 +34,7 @@ a {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -64,7 +64,7 @@ a {
 
 .menu-toggle {
   position: relative;
-  z-index: 31;
+  z-index: 120;
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
@@ -103,7 +103,7 @@ a {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 30;
+  z-index: 110;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -112,19 +112,25 @@ a {
   padding: 92px 22px 28px;
   background: #ffffff;
   box-shadow: -18px 0 42px rgba(0, 0, 0, 0.16);
+  pointer-events: none;
   transform: translateX(105%);
   transition: transform 0.25s ease;
 }
 
 .main-menu.is-open {
+  pointer-events: auto;
   transform: translateX(0);
 }
 
 .main-menu a {
+  position: relative;
+  z-index: 32;
   display: block;
   padding: 15px 12px;
   font-weight: 800;
   border-bottom: 1px solid var(--line);
+  pointer-events: auto;
+  touch-action: manipulation;
 }
 
 .main-menu a:hover,
@@ -135,7 +141,7 @@ a {
 .menu-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 25;
+  z-index: 90;
   display: none;
   background: rgba(0, 0, 0, 0.35);
 }

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var appVersion = "20260526-3";
+  var appVersion = "20260526-4";
   var versionCookie = "carta_version=" + appVersion;
 
   if (!document.cookie.includes(versionCookie)) {
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
       menu.classList.remove("is-open");
       backdrop.classList.remove("is-open");
       toggle.setAttribute("aria-expanded", "false");
-      toggle.setAttribute("aria-label", "Abrir menú");
+      toggle.setAttribute("aria-label", "Abrir menu");
     }
 
     function openMenu() {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
       menu.classList.add("is-open");
       backdrop.classList.add("is-open");
       toggle.setAttribute("aria-expanded", "true");
-      toggle.setAttribute("aria-label", "Cerrar menú");
+      toggle.setAttribute("aria-label", "Cerrar menu");
     }
 
     toggle.addEventListener("click", function () {
@@ -47,29 +47,46 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    menu.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function (event) {
-        if (
-          event.defaultPrevented ||
-          event.button !== 0 ||
-          event.metaKey ||
-          event.ctrlKey ||
-          event.shiftKey ||
-          event.altKey ||
-          link.target === "_blank"
-        ) {
-          return;
-        }
+    function goToMenuLink(link, event) {
+      if (
+        event.defaultPrevented ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        link.target === "_blank"
+      ) {
+        return;
+      }
 
-        var href = link.getAttribute("href");
-        if (!href || href.charAt(0) === "#") {
-          closeMenu();
-          return;
-        }
+      if (typeof event.button === "number" && event.button !== 0) {
+        return;
+      }
 
-        event.preventDefault();
+      var href = link.getAttribute("href");
+      if (!href || href.charAt(0) === "#") {
         closeMenu();
-        window.location.href = href;
+        return;
+      }
+
+      event.preventDefault();
+      closeMenu();
+      window.location.assign(new URL(href, window.location.href).href);
+    }
+
+    menu.querySelectorAll("a").forEach(function (link) {
+      var navigating = false;
+
+      ["pointerup", "touchend", "click"].forEach(function (eventName) {
+        link.addEventListener(eventName, function (event) {
+          if (navigating) {
+            event.preventDefault();
+            return;
+          }
+
+          navigating = true;
+          goToMenuLink(link, event);
+        });
       });
     });
   }
