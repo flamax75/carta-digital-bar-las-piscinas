@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var appVersion = "20260526-9";
+  var appVersion = "20260526-10";
   var versionCookie = "carta_version=" + appVersion;
 
   if (!document.cookie.includes(versionCookie)) {
@@ -11,8 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
   var backTop = document.querySelector(".back-top");
   var installPanel = document.querySelector("[data-install-panel]");
   var installAction = document.querySelector("[data-install-action]");
+  var installAndroid = document.querySelector("[data-install-android]");
+  var installIos = document.querySelector("[data-install-ios]");
   var installPrompt = null;
   var urlParams = new URLSearchParams(window.location.search);
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js").catch(function () {});
+  }
 
   if (urlParams.get("source") === "pwa") {
     localStorage.setItem("carta_installed", "true");
@@ -27,18 +33,40 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
+  function getDevice() {
+    var platform = navigator.platform || "";
+    var userAgent = navigator.userAgent || "";
+    var touchMac = platform === "MacIntel" && navigator.maxTouchPoints > 1;
+
+    if (/android/i.test(userAgent)) {
+      return "android";
+    }
+
+    if (/iphone|ipad|ipod/i.test(userAgent) || touchMac) {
+      return "ios";
+    }
+
+    return "other";
+  }
+
   function updateInstallPanel() {
     if (!installPanel) {
       return;
     }
 
-    var shouldHide = isInstalledApp();
+    var device = getDevice();
+    var shouldHide = isInstalledApp() || device === "other";
+
+    if (installAndroid) {
+      installAndroid.hidden = device !== "android";
+    }
+
+    if (installIos) {
+      installIos.hidden = device !== "ios";
+    }
+
     installPanel.hidden = shouldHide;
     document.body.classList.toggle("has-install-panel", !shouldHide);
-
-    if (installAction) {
-      installAction.hidden = shouldHide || !installPrompt;
-    }
   }
 
   updateInstallPanel();
@@ -46,6 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("beforeinstallprompt", function (event) {
     event.preventDefault();
     installPrompt = event;
+    if (installAction) {
+      installAction.textContent = "Instalar la carta";
+    }
     updateInstallPanel();
   });
 
@@ -58,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (installAction) {
     installAction.addEventListener("click", function () {
       if (!installPrompt) {
+        installAction.textContent = "Abre Chrome y usa Instalar app";
         return;
       }
 
