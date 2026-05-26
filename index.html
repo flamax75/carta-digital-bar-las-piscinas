@@ -15,7 +15,7 @@
   <link rel="manifest" href="manifest.webmanifest?v=20260526-7">
   <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png?v=20260526-5">
   <link rel="apple-touch-icon" sizes="180x180" href="img/icon-180.png?v=20260526-5">
-  <link rel="stylesheet" href="styles.css?v=20260526-7">
+  <link rel="stylesheet" href="styles.css?v=20260526-9">
 </head>
 <body>
   <header class="site-header">
@@ -58,6 +58,27 @@
 
   </main>
 
+  <aside class="install-panel" data-install-panel hidden aria-label="Guardar carta en el móvil">
+    <div class="install-panel-head">
+      <img src="img/logo.png?v=20260526-4" alt="">
+      <div>
+        <h2>Guarda la carta en tu móvil</h2>
+        <p>Accede a la carta desde un icono en la pantalla de inicio.</p>
+      </div>
+    </div>
+    <div class="install-panel-steps">
+      <article>
+        <h3>Android</h3>
+        <button class="install-action" type="button" data-install-action hidden>Instalar carta</button>
+        <p>Chrome: tres puntos de arriba, “Añadir a pantalla de inicio” y confirmar.</p>
+      </article>
+      <article>
+        <h3>iPhone</h3>
+        <p>Safari: compartir, “Añadir a pantalla de inicio” y confirmar.</p>
+      </article>
+    </div>
+  </aside>
+
   <footer class="footer">
     <div class="footer-inner">
       <h2>Bar Las Piscinas Fuenmayor</h2>
@@ -73,6 +94,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=20260526-7"></script>
+  <script src="script.js?v=20260526-9"></script>
 </body>
 </html>

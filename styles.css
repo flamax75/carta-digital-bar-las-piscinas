@@ -26,6 +26,10 @@ body {
   line-height: 1.5;
 }
 
+body.has-install-panel {
+  padding-bottom: 300px;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -257,6 +261,96 @@ h1 {
   background: var(--red-dark);
 }
 
+.install-panel {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  z-index: 70;
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #ffffff;
+  border: 2px solid var(--red);
+  border-radius: 8px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+}
+
+.install-panel[hidden] {
+  display: none;
+}
+
+.install-panel-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.install-panel-head img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+
+.install-panel h2 {
+  margin-bottom: 4px;
+  font-size: 1.18rem;
+  line-height: 1.1;
+}
+
+.install-panel h3 {
+  margin-bottom: 4px;
+  color: var(--red);
+  font-size: 0.98rem;
+  line-height: 1.15;
+}
+
+.install-panel p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.install-panel-steps {
+  display: grid;
+  gap: 10px;
+}
+
+.install-panel-steps article {
+  padding: 12px;
+  background: #fafafa;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--red);
+  border-radius: 8px;
+}
+
+.install-action {
+  width: 100%;
+  min-height: 48px;
+  margin: 2px 0 10px;
+  padding: 10px 14px;
+  color: #ffffff;
+  background: var(--red);
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.install-action:hover,
+.install-action:focus-visible {
+  background: var(--red-dark);
+}
+
+.install-action[hidden] {
+  display: none;
+}
+
 .menu-page {
   padding-top: 20px;
 }
@@ -390,6 +484,14 @@ h1 {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  body.has-install-panel {
+    padding-bottom: 210px;
+  }
+
+  .install-panel-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .page-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -414,5 +516,15 @@ h1 {
 
   .product-card {
     min-height: 112px;
+  }
+}
+
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  body.has-install-panel {
+    padding-bottom: 0;
+  }
+
+  .install-panel {
+    display: none;
   }
 }

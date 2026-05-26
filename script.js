@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var appVersion = "20260526-7";
+  var appVersion = "20260526-9";
   var versionCookie = "carta_version=" + appVersion;
 
   if (!document.cookie.includes(versionCookie)) {
@@ -9,6 +9,75 @@ document.addEventListener("DOMContentLoaded", function () {
   var toggle = document.querySelector(".menu-toggle");
   var menu = document.querySelector(".main-menu");
   var backTop = document.querySelector(".back-top");
+  var installPanel = document.querySelector("[data-install-panel]");
+  var installAction = document.querySelector("[data-install-action]");
+  var installPrompt = null;
+  var urlParams = new URLSearchParams(window.location.search);
+
+  if (urlParams.get("source") === "pwa") {
+    localStorage.setItem("carta_installed", "true");
+  }
+
+  function isInstalledApp() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.matchMedia("(display-mode: fullscreen)").matches ||
+      window.navigator.standalone === true ||
+      localStorage.getItem("carta_installed") === "true"
+    );
+  }
+
+  function updateInstallPanel() {
+    if (!installPanel) {
+      return;
+    }
+
+    var shouldHide = isInstalledApp();
+    installPanel.hidden = shouldHide;
+    document.body.classList.toggle("has-install-panel", !shouldHide);
+
+    if (installAction) {
+      installAction.hidden = shouldHide || !installPrompt;
+    }
+  }
+
+  updateInstallPanel();
+
+  window.addEventListener("beforeinstallprompt", function (event) {
+    event.preventDefault();
+    installPrompt = event;
+    updateInstallPanel();
+  });
+
+  window.addEventListener("appinstalled", function () {
+    installPrompt = null;
+    localStorage.setItem("carta_installed", "true");
+    updateInstallPanel();
+  });
+
+  if (installAction) {
+    installAction.addEventListener("click", function () {
+      if (!installPrompt) {
+        return;
+      }
+
+      installPrompt.prompt();
+      installPrompt.userChoice.finally(function () {
+        installPrompt = null;
+        updateInstallPanel();
+      });
+    });
+  }
+
+  ["(display-mode: standalone)", "(display-mode: fullscreen)"].forEach(function (query) {
+    var mediaQuery = window.matchMedia(query);
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateInstallPanel);
+    } else if (typeof mediaQuery.addListener === "function") {
+      mediaQuery.addListener(updateInstallPanel);
+    }
+  });
 
   if (toggle && menu) {
     var backdrop = document.createElement("div");
