@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var appVersion = "20260526-10";
+  var appVersion = "20260526-11";
   var versionCookie = "carta_version=" + appVersion;
 
   if (!document.cookie.includes(versionCookie)) {
@@ -12,24 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
   var installPanel = document.querySelector("[data-install-panel]");
   var installAction = document.querySelector("[data-install-action]");
   var installAndroid = document.querySelector("[data-install-android]");
+  var installAndroidHelp = document.querySelector("[data-install-android-help]");
   var installIos = document.querySelector("[data-install-ios]");
+  var installGeneric = document.querySelector("[data-install-generic]");
   var installPrompt = null;
-  var urlParams = new URLSearchParams(window.location.search);
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js").catch(function () {});
-  }
-
-  if (urlParams.get("source") === "pwa") {
-    localStorage.setItem("carta_installed", "true");
   }
 
   function isInstalledApp() {
     return (
       window.matchMedia("(display-mode: standalone)").matches ||
       window.matchMedia("(display-mode: fullscreen)").matches ||
-      window.navigator.standalone === true ||
-      localStorage.getItem("carta_installed") === "true"
+      window.navigator.standalone === true
     );
   }
 
@@ -55,14 +51,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     var device = getDevice();
-    var shouldHide = isInstalledApp() || device === "other";
+    var shouldHide = isInstalledApp();
 
     if (installAndroid) {
       installAndroid.hidden = device !== "android";
     }
 
+    if (installAction) {
+      installAction.hidden = !installPrompt;
+    }
+
+    if (installAndroidHelp) {
+      installAndroidHelp.hidden = !!installPrompt;
+    }
+
     if (installIos) {
       installIos.hidden = device !== "ios";
+    }
+
+    if (installGeneric) {
+      installGeneric.hidden = device !== "other";
     }
 
     installPanel.hidden = shouldHide;
@@ -82,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.addEventListener("appinstalled", function () {
     installPrompt = null;
-    localStorage.setItem("carta_installed", "true");
     updateInstallPanel();
   });
 
