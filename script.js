@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var appVersion = "20260526-2";
+  var appVersion = "20260526-3";
   var versionCookie = "carta_version=" + appVersion;
 
   if (!document.cookie.includes(versionCookie)) {
@@ -48,7 +48,29 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     menu.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", closeMenu);
+      link.addEventListener("click", function (event) {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey ||
+          link.target === "_blank"
+        ) {
+          return;
+        }
+
+        var href = link.getAttribute("href");
+        if (!href || href.charAt(0) === "#") {
+          closeMenu();
+          return;
+        }
+
+        event.preventDefault();
+        closeMenu();
+        window.location.href = href;
+      });
     });
   }
 
